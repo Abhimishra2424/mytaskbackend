@@ -9,11 +9,11 @@ const jwt = require('jsonwebtoken');
 
 const createCompany = async (req, res) => {
 
-    const { companyName, companyEmail, companyPassword } = req.body;
+    const { companyName, companyEmail, companyPassword , companyRole} = req.body;
 
     try {
         let company = await Company.findOne({ companyEmail });
-        
+
         if (company && company.companyEmail === companyEmail) {
             return res.status(400).json({ msg: 'Company already exists' });
         }
@@ -21,6 +21,7 @@ const createCompany = async (req, res) => {
         company = new Company({
             companyName,
             companyEmail,
+            companyRole,
             companyPassword
         });
 
@@ -63,7 +64,7 @@ const loginCompany = async (req, res) => {
             company: {
                 company_id: company.company_id,
                 companyName: company.companyName,
-                companyEmail: company.companyEmail
+                companyEmail: company.companyEmail,
             }
         };
 
@@ -75,6 +76,7 @@ const loginCompany = async (req, res) => {
             company_id: company.company_id,
             companyName: company.companyName,
             companyEmail: company.companyEmail,
+            companyRole: company.companyRole
         }
 
         return res.json({
@@ -90,16 +92,18 @@ const loginCompany = async (req, res) => {
 }
 
 const getAllCompanies = async (req, res) => {
-    
-        try {
-            let companies = await Company.findAll({});
-    
-            return res.json({ companies });
-    
-        } catch (err) {
-            console.error(err.message);
-            res.status(500).send('Server error');
-        }
+
+    try {
+        let companies = await Company.findAll({
+            attributes: ['company_id', 'companyName', 'companyEmail']
+        });
+
+        return res.json({ companies });
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
 }
 
 module.exports = {

@@ -17,6 +17,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
         },
         companyPassword: Sequelize.STRING,
+        companyRole : Sequelize.STRING,
 
     }, {
         tableName: 'company',
