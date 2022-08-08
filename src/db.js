@@ -1,6 +1,8 @@
 const { Sequelize, DataTypes } = require('sequelize');
 
-const sequelize = new Sequelize("task", "postgres", "root", {
+// in my laptop password is 'root'
+// in desktop password is 'postgres'
+const sequelize = new Sequelize("task", "postgres", "postgres", {
   host: "localhost",
   dialect: "postgres",
   pool: {

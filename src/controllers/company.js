@@ -13,8 +13,8 @@ const createCompany = async (req, res) => {
 
     try {
         let company = await Company.findOne({ companyEmail });
-
-        if (company) {
+        
+        if (company && company.companyEmail === companyEmail) {
             return res.status(400).json({ msg: 'Company already exists' });
         }
 
