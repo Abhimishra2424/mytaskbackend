@@ -89,8 +89,21 @@ const loginCompany = async (req, res) => {
     }
 }
 
+const getAllCompanies = async (req, res) => {
+    
+        try {
+            let companies = await Company.findAll({});
+    
+            return res.json({ companies });
+    
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server error');
+        }
+}
 
 module.exports = {
     createCompany,
-    loginCompany
+    loginCompany,
+    getAllCompanies
 }
