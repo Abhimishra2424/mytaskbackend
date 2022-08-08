@@ -154,9 +154,9 @@ const getAllEmployeeByCompanyId = async (req, res) => {
                 where: {
                     company_id
                 },
-                attributes: ['employee_id', 'employeeName', 'employeeEmail', 'employeeRole', 'company_id', 'companyName']
+                attributes: ['employee_id', 'employeeName', 'employeeEmail', 'employeeRole', 'company_id', 'companyName' ,]
             });
-    
+
             return res.json({ employees });
     
         } catch (err) {

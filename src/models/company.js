@@ -1,23 +1,25 @@
-module.exports = (sequelize, Sequelize) => {
+const { DataTypes } = require("sequelize");
+
+module.exports = (sequelize) => {
     const Company = sequelize.define('company', {
         company_id: {
-            type: Sequelize.INTEGER,
+            type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
         companyName: {
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: false,
             unique: true
 
         },
         companyEmail: {
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
             unique: true,
             allowNull: false,
         },
-        companyPassword: Sequelize.STRING,
-        companyRole : Sequelize.STRING,
+        companyPassword: DataTypes.STRING,
+        companyRole : DataTypes.STRING,
 
     }, {
         tableName: 'company',
