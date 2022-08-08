@@ -49,13 +49,18 @@ const loginCompany = async (req, res) => {
     const { companyEmail, companyPassword } = req.body;
 
     try {
-        let company = await Company.findOne({ companyEmail });
+        let company = await Company.findAll({ companyEmail });
 
-        if (!company) {
+        let matchCompany =  company.filter(c => c.companyEmail === companyEmail);
+
+        console.log(matchCompany);
+        console.log("matchCompany.companyPassword",matchCompany[0].companyPassword)
+
+        if (!matchCompany) {
             return res.status(400).json({ msg: 'Invalid Credentials' });
         }
 
-        const isMatch = await bcrypt.compare(companyPassword, company.companyPassword);
+        const isMatch = await bcrypt.compare(companyPassword, matchCompany[0].companyPassword);
 
         if (!isMatch) {
             return res.status(400).json({ msg: 'Invalid Credentials' });
@@ -63,9 +68,9 @@ const loginCompany = async (req, res) => {
 
         const payload = {
             company: {
-                company_id: company.company_id,
-                companyName: company.companyName,
-                companyEmail: company.companyEmail,
+                company_id: matchCompany[0].company_id,
+                companyName: matchCompany[0].companyName,
+                companyEmail: matchCompany[0].companyEmail,
             }
         };
 
@@ -74,10 +79,10 @@ const loginCompany = async (req, res) => {
         });
 
         var companydata = {
-            company_id: company.company_id,
-            companyName: company.companyName,
-            companyEmail: company.companyEmail,
-            companyRole: company.companyRole
+            company_id: matchCompany[0].company_id,
+            companyName: matchCompany[0].companyName,
+            companyEmail: matchCompany[0].companyEmail,
+            companyRole: matchCompany[0].companyRole
         }
 
         return res.json({
