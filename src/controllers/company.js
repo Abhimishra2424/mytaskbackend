@@ -137,9 +137,9 @@ const createEmployee = async (req, res) => {
             employeePassword
         });
 
-        const salt = await bcrypt.genSalt(10);
+        // const salt = await bcrypt.genSalt(10);
 
-        employee.employeePassword = await bcrypt.hash(employeePassword, salt);
+        // employee.employeePassword = await bcrypt.hash(employeePassword, salt);
 
         await employee.save();
 
@@ -160,7 +160,7 @@ const getAllEmployeeByCompanyId = async (req, res) => {
                 where: {
                     company_id
                 },
-                attributes: ['employee_id', 'employeeName', 'employeeEmail', 'employeeRole', 'company_id', 'companyName' ,]
+                attributes: ['employee_id', 'employeeName', 'employeeCode', 'employeeEmail', 'employeePassword', 'employeeRole', 'company_id', 'companyName' ,]
             });
 
             return res.json({ employees });
