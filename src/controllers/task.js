@@ -28,6 +28,28 @@ const createTask = async (req, res) => {
   res.status(200).json(task);
 };
 
+const getAllTaskByCompanyId = async (req, res) => {
+  const { company_id } = req.body;
+  const tasks = await Task.findAll({
+    where: {
+      company_id,
+    },
+  });
+  res.status(200).json(tasks);
+}
+
+const getAllTaskByEmployeeCode = async (req, res) => {
+  const { employeeCode } = req.body;
+  const tasks = await Task.findAll({
+    where: {
+      employeeCode,
+    },
+  });
+  res.status(200).json(tasks);
+}
+
 module.exports = {
   createTask,
+  getAllTaskByCompanyId,
+  getAllTaskByEmployeeCode
 };

@@ -47,7 +47,7 @@ const createEmployee = async (req, res) => {
 
 const getAllEmployeeByCompanyId = async (req, res) => {
     
-        const { company_id } = req.body;
+        const { company_id } = req.company;
     
         try {
             let employees = await Employee.findAll({

@@ -35,7 +35,7 @@ db.employee.belongsTo(db.company, { foreignKey: "company_id" });
 db.company.hasMany(db.employee, { foreignKey: "company_id" });
 
 
-db.sequelize.sync({ force: true }).then(() => {
+db.sequelize.sync({ force: false }).then(() => {
   console.log("Database & tables created!");
 });
 
