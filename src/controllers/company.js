@@ -114,7 +114,7 @@ const getAllCompanies = async (req, res) => {
 
 const createEmployee = async (req, res) => {
 
-    const { company_id, companyName, employeeName, employeeEmail, employeePassword, employeeRole } = req.body;
+    const { company_id, companyName, employeeName, employeeCode, employeeEmail, employeePassword, employeeRole } = req.body;
 
     try {
         let employee = await Employee.findAll({
@@ -131,6 +131,7 @@ const createEmployee = async (req, res) => {
             company_id,
             companyName,
             employeeName,
+            employeeCode,
             employeeEmail,
             employeeRole,
             employeePassword
