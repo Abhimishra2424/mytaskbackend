@@ -29,7 +29,7 @@ const createTask = async (req, res) => {
 };
 
 const getAllTaskByCompanyId = async (req, res) => {
-  const { company_id } = req.body;
+  const { company_id } = req.company;
   const tasks = await Task.findAll({
     where: {
       company_id,

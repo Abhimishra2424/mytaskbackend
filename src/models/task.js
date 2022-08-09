@@ -21,7 +21,7 @@ module.exports = (sequelize) => {
             allowNull: false
         },
         status: {
-            type: DataTypes.ENUM('open', 'in progress', 'done'),
+            type: DataTypes.STRING,
             allowNull: false
         },
         company_id: {
