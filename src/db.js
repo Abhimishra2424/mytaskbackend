@@ -28,12 +28,14 @@ db.sequelize = sequelize;
 
 db.company = require("./models/company")(sequelize, Sequelize);
 db.employee = require("./models/employee")(sequelize, Sequelize);
+db.task = require("./models/task")(sequelize, Sequelize);
 
 
 db.employee.belongsTo(db.company, { foreignKey: "company_id" });
 db.company.hasMany(db.employee, { foreignKey: "company_id" });
 
-db.sequelize.sync({ force: false }).then(() => {
+
+db.sequelize.sync({ force: true }).then(() => {
   console.log("Database & tables created!");
 });
 

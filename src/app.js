@@ -18,9 +18,11 @@ app.use(morgan('dev'))
 // Company
 const companyRoutes = require('./routes/company');
 const employeeRoutes = require('./routes/employee');
+const taskRoutes = require('./routes/task');
 
 app.use('/api', companyRoutes);
 app.use('/api', employeeRoutes);
+app.use('/api', taskRoutes);
 
 app.use('/', (req, res) => {
     res.send('Hello World');
