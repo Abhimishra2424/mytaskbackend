@@ -1,4 +1,5 @@
 const db = require("../db");
+const { Op } = require('sequelize');
 
 const Task = db.task;
 
@@ -48,8 +49,27 @@ const getAllTaskByEmployeeCode = async (req, res) => {
   res.status(200).json(tasks);
 }
 
+
+const getTaskSearchParam = async (req, res) => {
+  const { searchParam } = req.body;
+  const tasks = await Task.findAll({
+    where: {
+      [Op.or]: [
+        { taskCode: { [Op.like]: `%${searchParam}%` } },
+        { title: { [Op.like]: `%${searchParam}%` } },
+        { description: { [Op.like]: `%${searchParam}%` } },
+        { status: { [Op.like]: `%${searchParam}%` } },
+        { employeeName: { [Op.like]: `%${searchParam}%` } },
+        { employeeEmail: { [Op.like]: `%${searchParam}%` } },
+      ],
+    },
+  });
+  res.status(200).json(tasks);
+}
+
 module.exports = {
   createTask,
   getAllTaskByCompanyId,
-  getAllTaskByEmployeeCode
+  getAllTaskByEmployeeCode,
+  getTaskSearchParam
 };
