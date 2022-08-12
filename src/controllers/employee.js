@@ -106,7 +106,7 @@ const employeeLogin = async (req, res) => {
 
         return res.json({
             token: token,
-            company: payload
+            employee: payload.employee
         })
 
     } catch (err) {
