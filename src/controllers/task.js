@@ -30,6 +30,9 @@ const createTask = async (req, res) => {
 };
 
 const getAllTaskByCompanyId = async (req, res) => {
+  if(!req.company) {
+    return res.status(401).json({ msg: 'Unauthorized' });
+  }
   const { company_id } = req.company;
   const tasks = await Task.findAll({
     where: {
@@ -40,19 +43,23 @@ const getAllTaskByCompanyId = async (req, res) => {
 }
 
 const getAllTaskByEmployeeCode = async (req, res) => {
-  const { employeeCode } = req.body;
-  const tasks = await Task.findAll({
-    where: {
-      employeeCode,
-    },
-  });
-  res.status(200).json(tasks);
+  const { employeeCode } = req.employee;
+  if(!employeeCode) {
+    return res.status(401).json({ msg: 'Unauthorized' });
+  }else{
+    const tasks = await Task.findAll({
+      where: {
+        employeeCode,
+      },
+    });
+    res.status(200).json(tasks);
+  }
 }
 
 
 const getTaskSearchParam = async (req, res) => {
   const { searchParam } = req.body;
-  const { company_id } = req.company;
+  const { company_id } = req.company ? req.company : req.employee;
   const whereCondition = []
 
   if (searchParam) {
