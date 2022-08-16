@@ -43,3 +43,22 @@ WHERE
         )
         AND "Task"."company_id" = 2
     );
+
+UPDATE
+    "Task"
+SET
+    "taskCode" = $ 1,
+    "title" = $ 2,
+    "description" = $ 3,
+    "status" = $ 4,
+    "company_id" = $ 5,
+    "companyName" = $ 6,
+    "employeeCode" = $ 7,
+    "employeeName" = $ 8,
+    "employeeEmail" = $ 9,
+    "updatedAt" = $ 10
+WHERE
+    (
+        "taskCode" = $ 11
+        AND "company_id" = $ 12
+    )

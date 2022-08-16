@@ -117,6 +117,18 @@ const updateTask = async (req, res) => {
     employeeName,
     employeeEmail,
   } = req.body;
+  const whereCondition = []
+  if (taskCode) {
+    whereCondition.push({
+      taskCode,
+    });
+
+  }
+  if (company_id) {
+    whereCondition.push({
+      company_id,
+    });
+  }
   const task = await Task.update({
     taskCode,
     title,
@@ -129,7 +141,7 @@ const updateTask = async (req, res) => {
     employeeEmail,
   }, {
     where: {
-      taskCode,
+      [Op.and]: whereCondition,
     },
   });
 
