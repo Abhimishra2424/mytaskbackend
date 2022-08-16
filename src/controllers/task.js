@@ -2,6 +2,7 @@ const db = require("../db");
 const { Op } = require('sequelize');
 
 const Task = db.task;
+const TaskHistory = db.taskHistory;
 
 const createTask = async (req, res) => {
   const {
@@ -30,7 +31,7 @@ const createTask = async (req, res) => {
 };
 
 const getAllTaskByCompanyId = async (req, res) => {
-  if(!req.company) {
+  if (!req.company) {
     return res.status(401).json({ msg: 'Unauthorized' });
   }
   const { company_id } = req.company;
@@ -44,9 +45,9 @@ const getAllTaskByCompanyId = async (req, res) => {
 
 const getAllTaskByEmployeeCode = async (req, res) => {
   const { employeeCode } = req.employee;
-  if(!employeeCode) {
+  if (!employeeCode) {
     return res.status(401).json({ msg: 'Unauthorized' });
-  }else{
+  } else {
     const tasks = await Task.findAll({
       where: {
         employeeCode,
@@ -150,9 +151,39 @@ const updateTask = async (req, res) => {
     where: {
       [Op.and]: whereCondition,
     },
+    // order: [
+    //   ['updatedAt', 'DESC'],
+    // ],
   });
 
+  const taskHistory = await TaskHistory.create({
+    taskCode,
+    title,
+    description,
+    status,
+    company_id,
+    companyName,
+    employeeCode,
+    employeeName,
+    employeeEmail,
+  })
+
   res.status(200).json(task);
+}
+
+const getTaskHistoryByCompanyId = async (req, res) => {
+  const { company_id } = req.body;
+
+  const tasks = await TaskHistory.findAll({
+    where: {
+      company_id,
+    },
+    order: [
+      ['updatedAt', 'DESC'],
+    ],
+  });
+  res.status(200).json(tasks);
+
 }
 
 module.exports = {
@@ -160,5 +191,6 @@ module.exports = {
   getAllTaskByCompanyId,
   getAllTaskByEmployeeCode,
   getTaskSearchParam,
-  updateTask
+  updateTask,
+  getTaskHistoryByCompanyId
 };

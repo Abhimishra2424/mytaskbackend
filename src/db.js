@@ -29,6 +29,7 @@ db.sequelize = sequelize;
 db.company = require("./models/company")(sequelize, Sequelize);
 db.employee = require("./models/employee")(sequelize, Sequelize);
 db.task = require("./models/task")(sequelize, Sequelize);
+db.taskHistory = require("./models/taskHistory")(sequelize, Sequelize);
 
 
 db.employee.belongsTo(db.company, { foreignKey: "company_id" });
