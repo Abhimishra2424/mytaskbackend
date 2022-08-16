@@ -105,9 +105,41 @@ const getTaskSearchParam = async (req, res) => {
   res.status(200).json(tasks);
 }
 
+const updateTask = async (req, res) => {
+  const {
+    taskCode,
+    title,
+    description,
+    status,
+    company_id,
+    companyName,
+    employeeCode,
+    employeeName,
+    employeeEmail,
+  } = req.body;
+  const task = await Task.update({
+    taskCode,
+    title,
+    description,
+    status,
+    company_id,
+    companyName,
+    employeeCode,
+    employeeName,
+    employeeEmail,
+  }, {
+    where: {
+      taskCode,
+    },
+  });
+
+  res.status(200).json(task);
+}
+
 module.exports = {
   createTask,
   getAllTaskByCompanyId,
   getAllTaskByEmployeeCode,
-  getTaskSearchParam
+  getTaskSearchParam,
+  updateTask
 };
