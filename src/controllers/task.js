@@ -52,16 +52,54 @@ const getAllTaskByEmployeeCode = async (req, res) => {
 
 const getTaskSearchParam = async (req, res) => {
   const { searchParam } = req.body;
+  const { company_id } = req.company;
+  const whereCondition = []
+
+  if (searchParam) {
+    whereCondition.push({
+      [Op.or]: [
+        {
+          title: {
+            [Op.like]: `%${searchParam}%`,
+          },
+        },
+        {
+          description: {
+            [Op.like]: `%${searchParam}%`,
+          },
+        },
+        {
+          taskCode: {
+            [Op.like]: `%${searchParam}%`,
+          }
+        },
+        {
+          status: {
+            [Op.like]: `%${searchParam}%`,
+          }
+        },
+        {
+          employeeName: {
+            [Op.like]: `%${searchParam}%`,
+          }
+        },
+        {
+          employeeEmail: {
+            [Op.like]: `%${searchParam}%`,
+          }
+        }
+      ],
+    });
+  }
+  if (company_id) {
+    whereCondition.push({
+      company_id,
+    });
+  }
+
   const tasks = await Task.findAll({
     where: {
-      [Op.or]: [
-        { taskCode: { [Op.like]: `%${searchParam}%` } },
-        { title: { [Op.like]: `%${searchParam}%` } },
-        { description: { [Op.like]: `%${searchParam}%` } },
-        { status: { [Op.like]: `%${searchParam}%` } },
-        { employeeName: { [Op.like]: `%${searchParam}%` } },
-        { employeeEmail: { [Op.like]: `%${searchParam}%` } },
-      ],
+      [Op.and]: whereCondition,
     },
   });
   res.status(200).json(tasks);
