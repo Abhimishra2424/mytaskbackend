@@ -62,3 +62,12 @@ WHERE
         "taskCode" = $ 11
         AND "company_id" = $ 12
     )
+
+    
+SELECT
+    *
+FROM
+    "TaskHistory"
+WHERE
+    company_id = 2
+    and status = 'done'

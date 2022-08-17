@@ -1,5 +1,6 @@
 const db = require("../db");
-const { Op } = require('sequelize');
+const { Op } = require("sequelize");
+const moment = require("moment");
 
 const Task = db.task;
 const TaskHistory = db.taskHistory;
@@ -32,7 +33,7 @@ const createTask = async (req, res) => {
 
 const getAllTaskByCompanyId = async (req, res) => {
   if (!req.company) {
-    return res.status(401).json({ msg: 'Unauthorized' });
+    return res.status(401).json({ msg: "Unauthorized" });
   }
   const { company_id } = req.company;
   const tasks = await Task.findAll({
@@ -41,12 +42,12 @@ const getAllTaskByCompanyId = async (req, res) => {
     },
   });
   res.status(200).json(tasks);
-}
+};
 
 const getAllTaskByEmployeeCode = async (req, res) => {
   const { employeeCode } = req.employee;
   if (!employeeCode) {
-    return res.status(401).json({ msg: 'Unauthorized' });
+    return res.status(401).json({ msg: "Unauthorized" });
   } else {
     const tasks = await Task.findAll({
       where: {
@@ -55,13 +56,12 @@ const getAllTaskByEmployeeCode = async (req, res) => {
     });
     res.status(200).json(tasks);
   }
-}
-
+};
 
 const getTaskSearchParam = async (req, res) => {
   const { searchParam } = req.body;
   const { company_id } = req.company ? req.company : req.employee;
-  const whereCondition = []
+  const whereCondition = [];
 
   if (searchParam) {
     whereCondition.push({
@@ -79,23 +79,23 @@ const getTaskSearchParam = async (req, res) => {
         {
           taskCode: {
             [Op.like]: `%${searchParam}%`,
-          }
+          },
         },
         {
           status: {
             [Op.like]: `%${searchParam}%`,
-          }
+          },
         },
         {
           employeeName: {
             [Op.like]: `%${searchParam}%`,
-          }
+          },
         },
         {
           employeeEmail: {
             [Op.like]: `%${searchParam}%`,
-          }
-        }
+          },
+        },
       ],
     });
   }
@@ -111,7 +111,7 @@ const getTaskSearchParam = async (req, res) => {
     },
   });
   res.status(200).json(tasks);
-}
+};
 
 const updateTask = async (req, res) => {
   const {
@@ -125,36 +125,38 @@ const updateTask = async (req, res) => {
     employeeName,
     employeeEmail,
   } = req.body;
-  const whereCondition = []
+  const whereCondition = [];
   if (taskCode) {
     whereCondition.push({
       taskCode,
     });
-
   }
   if (company_id) {
     whereCondition.push({
       company_id,
     });
   }
-  const task = await Task.update({
-    taskCode,
-    title,
-    description,
-    status,
-    company_id,
-    companyName,
-    employeeCode,
-    employeeName,
-    employeeEmail,
-  }, {
-    where: {
-      [Op.and]: whereCondition,
+  const task = await Task.update(
+    {
+      taskCode,
+      title,
+      description,
+      status,
+      company_id,
+      companyName,
+      employeeCode,
+      employeeName,
+      employeeEmail,
     },
-    // order: [
-    //   ['updatedAt', 'DESC'],
-    // ],
-  });
+    {
+      where: {
+        [Op.and]: whereCondition,
+      },
+      // order: [
+      //   ['updatedAt', 'DESC'],
+      // ],
+    }
+  );
 
   const taskHistory = await TaskHistory.create({
     taskCode,
@@ -166,25 +168,51 @@ const updateTask = async (req, res) => {
     employeeCode,
     employeeName,
     employeeEmail,
-  })
+  });
 
   res.status(200).json(task);
-}
+};
 
 const getTaskHistoryByCompanyId = async (req, res) => {
-  const { company_id } = req.body;
+  const { employeeCode } = req.body;
 
   const tasks = await TaskHistory.findAll({
     where: {
-      company_id,
+      employeeCode,
     },
-    order: [
-      ['updatedAt', 'DESC'],
+    attributes: [
+      "taskCode",
+      "title",
+      "description",
+      "status",
+      "company_id",
+      "companyName",
+      "employeeCode",
+      "employeeName",
+      "employeeEmail",
+      "updatedAt",
     ],
+    order: [["updatedAt", "DESC"]],
   });
-  res.status(200).json(tasks);
 
-}
+  let formattedTasks = [];
+  tasks.forEach((task) => {
+    formattedTasks.push({
+      taskCode: task.taskCode,
+      title: task.title,
+      description: task.description,
+      status: task.status,
+      company_id: task.company_id,
+      companyName: task.companyName,
+      employeeCode: task.employeeCode,
+      employeeName: task.employeeName,
+      employeeEmail: task.employeeEmail,
+      updatedAt: moment(task.updatedAt).format("DD-MM-YYYY hh:mm:ss"),
+    });
+  });
+
+  res.status(200).json(formattedTasks);
+};
 
 module.exports = {
   createTask,
@@ -192,5 +220,5 @@ module.exports = {
   getAllTaskByEmployeeCode,
   getTaskSearchParam,
   updateTask,
-  getTaskHistoryByCompanyId
+  getTaskHistoryByCompanyId,
 };
