@@ -32,10 +32,7 @@ const createTask = async (req, res) => {
 };
 
 const getAllTaskByCompanyId = async (req, res) => {
-  if (!req.company) {
-    return res.status(401).json({ msg: "Unauthorized" });
-  }
-  const { company_id } = req.company;
+  const { company_id } = req.company ? req.company : req.employee;
   const tasks = await Task.findAll({
     where: {
       company_id,
