@@ -174,11 +174,12 @@ const updateTask = async (req, res) => {
 };
 
 const getTaskHistoryByCompanyId = async (req, res) => {
-  const { employeeCode } = req.body;
+  const taskCode = req.params.id
+
 
   const tasks = await TaskHistory.findAll({
     where: {
-      employeeCode,
+      taskCode,
     },
     attributes: [
       "taskCode",
