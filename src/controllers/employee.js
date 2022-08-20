@@ -3,6 +3,7 @@
 const db = require('../db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { Op } = require("sequelize");
 
 const Employee = db.employee;
 
@@ -117,9 +118,64 @@ const employeeLogin = async (req, res) => {
     }
 }
 
+const editEmployee = async (req, res) => {
+    
+        const { employee_id, companyName, employeeName, employeeCode, employeeEmail, employeePassword, employeeRole } = req.body.employee;
+        const { company_id  } = req.company ? req.company : req.employee;
+         
+        const whereCondition = []
+        if (employee_id) {
+            whereCondition.push({ employee_id })
+            throw new Error('employee_id is required')
+        }
+        if (company_id) {
+            whereCondition.push({ company_id })
+           throw new Error('Company Id is missing')
+        }
+        if(companyName){
+            whereCondition.push({ companyName })
+            throw new Error('Company Name is missing')
+        }
+        if(employeeCode){
+            whereCondition.push({ employeeCode })
+            throw new Error('Employee Code is missing')
+        }
+        try {
+            let employee = await Employee.findAll({
+                where: {
+                    [Op.or]: whereCondition
+                }
+            });
+    
+            if (!employee) {
+                return res.status(400).json({ msg: 'Employee not found' });
+            }
+            employee = new Employee({
+                employee_id,
+                company_id,
+                companyName,
+                employeeName,
+                employeeCode,
+                employeeEmail,
+                employeeRole,
+                employeePassword
+            });
+            await employee.save();
+
+            const allUpdatedEmployee = await Employee.findAll({})
+    
+            return res.json({ allUpdatedEmployee });
+    
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server error');
+        }
+}
+
 module.exports = {
     createEmployee,
     getAllEmployeeByCompanyId,
-    employeeLogin
+    employeeLogin,
+    editEmployee
 
 }
