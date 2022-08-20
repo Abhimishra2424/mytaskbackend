@@ -49,8 +49,10 @@ const createEmployee = async (req, res) => {
 
 const getAllEmployeeByCompanyId = async (req, res) => {
 
-    const { company_id } = req.company;
-
+    const { company_id } = req.company ? req.company : req.employee;
+     if(req.employee){
+         return res.status(400).json({ msg: 'Your Are Not Admin' });
+     }
     try {
         let employees = await Employee.findAll({
             where: {
