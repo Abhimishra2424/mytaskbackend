@@ -212,6 +212,51 @@ const getTaskHistoryByCompanyId = async (req, res) => {
   res.status(200).json(formattedTasks);
 };
 
+const taskClose = async (req, res) => {
+  var { taskCode  , title , description , status , company_id , companyName, employeeCode , employeeName, employeeEmail} = req.body;
+  let whereCondition = [];
+  if (taskCode) {
+    whereCondition.push({
+      taskCode,
+    });
+  }
+  if (company_id) {
+    whereCondition.push({
+      company_id,
+    });
+  }
+  const findtask = await Task.findOne({
+    where: {
+      [Op.and]: whereCondition,
+    }
+  })
+  if(findtask.status === 'done'){
+    status = 'close'
+  }
+  if(findtask){
+    const task = await Task.update(
+      {
+        taskCode,
+        title,
+        description,
+        status,
+        company_id,
+        companyName,
+        employeeCode,
+        employeeName,
+        employeeEmail,
+      },
+      {
+        where: {
+          [Op.and]: whereCondition,
+        },
+      }
+    );
+
+    res.status(200).json(task);
+  }
+}
+
 module.exports = {
   createTask,
   getAllTaskByCompanyId,
@@ -219,4 +264,5 @@ module.exports = {
   getTaskSearchParam,
   updateTask,
   getTaskHistoryByCompanyId,
+  taskClose,
 };

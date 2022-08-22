@@ -14,5 +14,6 @@ router.post('/task/getAllTaskByEmployeeCode', employeeAuth, taskController.getAl
 router.post('/task/getTaskSearchParam', auth, taskController.getTaskSearchParam);
 router.post('/task/getTaskHistoryCompanyId/:id', taskController.getTaskHistoryByCompanyId);
 router.post('/task/updateTask', taskController.updateTask);
+router.post('/task/taskClose', taskController.taskClose);
 
 module.exports = router;
