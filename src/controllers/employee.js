@@ -4,6 +4,7 @@ const db = require('../db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { Op } = require("sequelize");
+require("dotenv").config();
 
 const Employee = db.employee;
 
@@ -103,8 +104,8 @@ const employeeLogin = async (req, res) => {
             }
         };
 
-        var token = jwt.sign({ payload }, "abhishekmishra", {
-            expiresIn: 86400 // 24 hours
+        var token = jwt.sign({ payload },  process.env.JWT_SECRET, {
+            expiresIn:  process.env.JWT_LIFETIME
         });
 
         return res.json({

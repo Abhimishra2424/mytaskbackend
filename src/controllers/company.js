@@ -5,7 +5,7 @@ const Company = db.company;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-
+require("dotenv").config();
 
 const createCompany = async (req, res) => {
 
@@ -75,8 +75,8 @@ const loginCompany = async (req, res) => {
             }
         };
 
-        var token = jwt.sign({ payload }, "abhishekmishra", {
-            expiresIn: 86400 // 24 hours
+        var token = jwt.sign({ payload },  process.env.JWT_SECRET, {
+            expiresIn:  process.env.JWT_LIFETIME
         });
 
         var companydata = {
