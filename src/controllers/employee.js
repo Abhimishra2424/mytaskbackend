@@ -123,25 +123,21 @@ const editEmployee = async (req, res) => {
         const { employee_id, companyName, employeeName, employeeCode, employeeEmail, employeePassword, employeeRole } = req.body.employee;
         const { company_id  } = req.company ? req.company : req.employee;
          
+        try {
         const whereCondition = []
         if (employee_id) {
             whereCondition.push({ employee_id })
-            throw new Error('employee_id is required')
         }
         if (company_id) {
             whereCondition.push({ company_id })
-           throw new Error('Company Id is missing')
         }
         if(companyName){
             whereCondition.push({ companyName })
-            throw new Error('Company Name is missing')
         }
         if(employeeCode){
             whereCondition.push({ employeeCode })
-            throw new Error('Employee Code is missing')
         }
-        try {
-            let employee = await Employee.findAll({
+            let employee = await Employee.findOne({
                 where: {
                     [Op.or]: whereCondition
                 }
@@ -150,7 +146,8 @@ const editEmployee = async (req, res) => {
             if (!employee) {
                 return res.status(400).json({ msg: 'Employee not found' });
             }
-            employee = new Employee({
+            
+            const updatedEmployee = await Employee.update({
                 employee_id,
                 company_id,
                 companyName,
@@ -159,12 +156,21 @@ const editEmployee = async (req, res) => {
                 employeeEmail,
                 employeeRole,
                 employeePassword
-            });
-            await employee.save();
+            }, {
+                where: {
+                       employee_id
+                    }
+            })
 
-            const allUpdatedEmployee = await Employee.findAll({})
+           if(updatedEmployee){
+              var allUpdatedEmployee = await Employee.findAll({
+                where: {
+                    company_id
+                }
+              })
+           }
     
-            return res.json({ allUpdatedEmployee });
+            return res.json( allUpdatedEmployee );
     
         } catch (err) {
             console.error(err.message);
