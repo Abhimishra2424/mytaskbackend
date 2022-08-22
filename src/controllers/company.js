@@ -53,7 +53,9 @@ const loginCompany = async (req, res) => {
         let matchCompany =  company.filter(c => c.companyEmail === companyEmail);
 
         console.log(matchCompany);
-        console.log("matchCompany.companyPassword",matchCompany[0].companyPassword)
+        console.log("matchCompany.companyPassword", matchCompany[0].companyPassword)
+
+        
 
         if (!matchCompany) {
             return res.status(400).json({ msg: 'Invalid Credentials' });

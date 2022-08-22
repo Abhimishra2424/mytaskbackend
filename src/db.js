@@ -1,16 +1,16 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const { Sequelize } = require('sequelize');
 
-// in my laptop password is 'root'
-// in desktop password is 'postgres'
-const sequelize = new Sequelize("task", "postgres", "postgres", {
-  host: "localhost",
+require("dotenv").config();
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, process.env.DB_PASSWORD, {
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
   dialect: "postgres",
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-  },
-  logging: true,
+  "ssl": true,
+  "dialectOptions": {
+    "ssl": {
+      "require": true
+    }
+  }
 });
 
 sequelize
