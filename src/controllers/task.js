@@ -42,9 +42,9 @@ const getAllTaskByCompanyId = async (req, res) => {
 };
 
 const getAllTaskByEmployeeCode = async (req, res) => {
-  const { employeeCode } = req.employee;
+  const { employeeCode } = req.employee ;
   if (!employeeCode) {
-    return res.status(401).json({ msg: "Unauthorized" });
+    return res.status(400).json({ msg: "You Are Admin Not A Employee" });
   } else {
     const tasks = await Task.findAll({
       where: {
