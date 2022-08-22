@@ -71,3 +71,5 @@ FROM
 WHERE
     company_id = 2
     and status = 'done'
+
+    delete from "Task" where id = 42;

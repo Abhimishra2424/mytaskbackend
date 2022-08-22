@@ -10,5 +10,6 @@ router.post("/employee/createemployee", employeeController.createEmployee);
 router.post("/employee/getAllEmployeeByCompanyId", auth , employeeController.getAllEmployeeByCompanyId);
 router.post('/employee/employeeLogin', employeeController.employeeLogin);
 router.post('/employee/editEmployee', auth , employeeController.editEmployee);
+router.post('/employee/deleteEmployee', employeeController.deleteEmployee);
 
 module.exports = router;

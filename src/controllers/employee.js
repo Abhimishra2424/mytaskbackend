@@ -178,10 +178,38 @@ const editEmployee = async (req, res) => {
         }
 }
 
+const deleteEmployee = async (req, res) => {
+    const { employee_id } = req.body;
+    // const { company_id } = req.company ? req.company : req.employee;
+    try {
+        const employee = await Employee.findOne({
+            where: {
+                employee_id,
+            }
+        });
+
+        if (!employee) {
+            return res.status(400).json({ msg: 'Employee not found' });
+        }
+
+        await Employee.destroy({
+            where: {
+                employee_id,
+            }
+        });
+
+        return res.json({ msg: 'Employee deleted' });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+}
+
 module.exports = {
     createEmployee,
     getAllEmployeeByCompanyId,
     employeeLogin,
-    editEmployee
+    editEmployee,
+    deleteEmployee
 
 }
