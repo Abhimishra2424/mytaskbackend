@@ -48,21 +48,20 @@ const loginCompany = async (req, res) => {
     var { companyEmail, companyPassword } = req.body;
 
     try {
-        let company = await Company.findOne({ companyEmail });
-        console.log("company",company.dataValues.company)
+        let company = await Company.findAll({ companyEmail });
 
-        // let matchCompany =  company.filter(c => c.companyEmail === companyEmail);
+        let matchCompany =  company.filter(c => c.companyEmail === companyEmail);
 
-        // console.log(matchCompany);
-        // console.log("matchCompany.companyPassword", matchCompany.companyPassword)
+        console.log(matchCompany);
+        console.log("matchCompany.companyPassword", matchCompany[0].companyPassword)
 
-        if (!company) {
+        if (!matchCompany) {
             return res.status(400).json({ msg: 'Invalid Credentials' });
         }
 
     
         var password =  companyPassword.toString()
-        const isMatch = await bcrypt.compare(password, company.dataValues.companyPassword);
+        const isMatch = await bcrypt.compare(password, matchCompany[0].companyPassword);
 
         if (!isMatch) {
             return res.status(400).json({ msg: 'Invalid Credentials' });
@@ -70,9 +69,9 @@ const loginCompany = async (req, res) => {
 
         const payload = {
             company: {
-                company_id:company.dataValues.company_id,
-                companyName:company.dataValues.companyName,
-                companyEmail:company.dataValues.companyEmail,
+                company_id: matchCompany[0].company_id,
+                companyName:matchCompany[0].companyName,
+                companyEmail:matchCompany[0].companyEmail,
             }
         };
 
@@ -81,10 +80,10 @@ const loginCompany = async (req, res) => {
         });
 
         var companydata = {
-            company_id: company.dataValues.company_id,
-            companyName: company.dataValues.companyName,
-            companyEmail: company.dataValues.companyEmail,
-            companyRole: company.dataValues.companyRole
+            company_id: matchCompany[0].company_id,
+            companyName: matchCompany[0].companyName,
+            companyEmail: matchCompany[0].companyEmail,
+            companyRole: matchCompany[0].companyRole
         }
 
         return res.json({
