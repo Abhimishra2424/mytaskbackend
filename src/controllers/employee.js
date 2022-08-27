@@ -7,6 +7,7 @@ const { Op } = require("sequelize");
 require("dotenv").config();
 
 const Employee = db.employee;
+const Note = db.note;
 
 
 
@@ -206,11 +207,74 @@ const deleteEmployee = async (req, res) => {
     }
 }
 
+const employeeNoteCreate = async (req , res) =>{
+    const { company_id ,companyName , employeeCode ,  employeeName,  employeeEmail , notes , note_id } = req.body;
+    
+    try {
+        let note = await Note.findAll({
+            where : {
+                note_id
+            }
+        });
+
+        if(note.length > 0){
+            return res.status(400).json({ msg: 'Note already exists' });
+        }
+
+
+        note = new Note({
+            company_id ,companyName ,  employeeCode,  employeeName,  employeeEmail , notes , note_id
+        });
+
+        await note.save();
+
+        return res.json({ msg: 'Note Created', note });
+
+    } catch (error) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+}
+
+const getAllNotesByEmployeeIdandCompanyId = async (req,res) =>{
+    const {company_id , employeeCode} = req.body
+
+    try {
+       if(!company_id){
+        return res.status(400).send({msg:"plz provide company_id"})
+       }
+       if(!employeeCode){
+        return res.status(400).send({msg:"plz provide employeeCode"})
+       }
+        var whereCondition = []
+
+        if(company_id){
+            whereCondition.push({company_id})
+        }
+        if(employeeCode){
+            whereCondition.push({employeeCode})
+        }
+
+        let notes = await Note.findAll({
+            where: {
+                [Op.and]: whereCondition,
+              },
+        });
+
+        return res.json(notes);
+    } catch (error) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+}
+
 module.exports = {
     createEmployee,
     getAllEmployeeByCompanyId,
     employeeLogin,
     editEmployee,
-    deleteEmployee
+    deleteEmployee,
+    employeeNoteCreate,
+    getAllNotesByEmployeeIdandCompanyId
 
 }
