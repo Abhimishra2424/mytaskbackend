@@ -237,7 +237,7 @@ const employeeNoteCreate = async (req , res) =>{
 }
 
 const getAllNotesByEmployeeIdandCompanyId = async (req,res) =>{
-    const {company_id , employeeCode} = req.body
+    const {company_id , employeeCode} = req.employee ? req.employee :  req.body;
 
     try {
        if(!company_id){
