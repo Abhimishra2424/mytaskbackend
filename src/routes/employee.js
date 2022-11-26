@@ -12,7 +12,7 @@ router.post('/employee/employeeLogin', employeeController.employeeLogin);
 router.post('/employee/editEmployee', auth , employeeController.editEmployee);
 router.post('/employee/deleteEmployee', employeeController.deleteEmployee);
 router.post('/employee/employeeNoteCreate', employeeController.employeeNoteCreate)
-router.post('/employee/getAllNotesByEmployeeIdandCompanyId',auth, employeeController.getAllNotesByEmployeeIdandCompanyId)
+router.get('/employee/getAllNotesByEmployeeIdandCompanyId',auth, employeeController.getAllNotesByEmployeeIdandCompanyId)
 
 
 module.exports = router;
