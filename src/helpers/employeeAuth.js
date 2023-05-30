@@ -8,7 +8,7 @@ const employeeAuth = async (req, res, next) => {
     }
     const token = authHeader.split(' ')[1]
     try {
-      const  decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const  decoded = jwt.verify(token, "abhsihekmishraforreactjsdeveloper");
       if(decoded.payload.company){
         req.employee = ""
         next()
