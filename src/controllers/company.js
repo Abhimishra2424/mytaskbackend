@@ -75,8 +75,8 @@ const loginCompany = async (req, res) => {
             }
         };
 
-        var token = jwt.sign({ payload }, "abhsihekmishraforreactjsdeveloper", {
-            expiresIn:  "1d"
+        var token = jwt.sign({ payload },  process.env.JWT_SECRET, {
+            expiresIn:  process.env.JWT_LIFETIME
         });
 
         var companydata = {
